@@ -4,6 +4,13 @@ from solana.publickey import PublicKey
 from solana.rpc.api import Client
 from solana.rpc.types import TokenAccountOpts
 
+def get_amm_id(baseMint:str): # baseMint - token address
+    pools = requests.get('https://api.raydium.io/v2/sdk/liquidity/mainnet.json').json()
+    pools_list = [*pools["official"],*pools["unOfficial"]]
+    for pool in pools_list:
+        if pool["baseMint"] == baseMint:
+            return pool["id"]
+    raise Exception(f'{baseMint} baseMint not found!')
 
 def extract_pool_info(pools_list: list, pool_id: str) -> dict:
     pools_list = [*pools_list["official"],*pools_list["unOfficial"]]
