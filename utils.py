@@ -6,6 +6,7 @@ from solana.rpc.types import TokenAccountOpts
 
 
 def extract_pool_info(pools_list: list, pool_id: str) -> dict:
+    pools_list = [*pools_list["official"],*pools_list["unOfficial"]]
     for pool in pools_list:
         if pool['id'] == pool_id:
             return pool
@@ -13,7 +14,7 @@ def extract_pool_info(pools_list: list, pool_id: str) -> dict:
 
 
 def fetch_pool_keys(pool_id: str):
-    pools = requests.get('https://api.raydium.io/v2/sdk/liquidity/mainnet.json').json()['official']
+    pools = requests.get('https://api.raydium.io/v2/sdk/liquidity/mainnet.json').json()
     amm_info = extract_pool_info(pools, pool_id)
     return {
         'amm_id': PublicKey(pool_id),
