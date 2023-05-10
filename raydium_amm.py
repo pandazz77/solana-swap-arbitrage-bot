@@ -18,6 +18,7 @@ AMM_PROGRAM_VERSION = 4
 AMM_PROGRAM_ID = PublicKey('675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8')
 TOKEN_PROGRAM_ID = PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
 SERUM_PROGRAM_ID = PublicKey('9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin')
+SOL_PUBKEY = PublicKey("So11111111111111111111111111111111111111112")
 
 LIQUIDITY_FEES_NUMERATOR = 25
 LIQUIDITY_FEES_DENOMINATOR = 10000
@@ -150,10 +151,16 @@ class Liquidity:
         return round(compute_buy_price(pool_info), 4), round(compute_sell_price(pool_info), 4)
 
     async def get_balance(self):
-        base_token_balance = (await self.conn.get_token_account_balance(self.base_token_account))['result']['value'][
-            'uiAmount']
-        quote_token_balance = (await self.conn.get_token_account_balance(self.quote_token_account))['result']['value'][
-            'uiAmount']
+        if self.base_token_account == SOL_PUBKEY:
+            base_token_balance = (await self.conn.get_balance(self.owner.public_key))["result"]["value"]*10**-9
+        else:
+            base_token_balance = (await self.conn.get_token_account_balance(self.base_token_account))['result']['value']['uiAmount']
+
+        if self.quote_token_account == SOL_PUBKEY:
+            quote_token_balance = (await self.conn.get_balance(self.owner.public_key))["result"]["value"]*10**-9
+        else:
+            quote_token_balance = (await self.conn.get_token_account_balance(self.quote_token_account))['result']['value']['uiAmount']
+
         return {self.base_symbol: base_token_balance, self.quote_symbol: quote_token_balance}
 
     async def wait_for_updated_balance(self, balance_before: dict):

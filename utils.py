@@ -47,6 +47,7 @@ def fetch_pool_keys(pool_id: str):
 
 def get_token_account(endpoint: str, owner: PublicKey, mint: PublicKey):
     account_data = Client(endpoint).get_token_accounts_by_owner(owner, TokenAccountOpts(mint))
+    if account_data["result"]["value"] == []: return PublicKey("So11111111111111111111111111111111111111112")
     return PublicKey(account_data['result']['value'][0]['pubkey'])
 
 

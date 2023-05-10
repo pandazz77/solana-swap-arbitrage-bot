@@ -7,7 +7,7 @@ from loguru import logger
 
 from CEX import CEX
 from raydium_amm import Liquidity
-from utils import purchase_info, sale_info
+from utils import purchase_info, sale_info, get_amm_id
 
 logger.add('bot.csv', format="{time:YYYY-MM-DD HH:mm:ss},{level},{message}")
 
@@ -133,7 +133,7 @@ async def main():
     load_conf()
     amm = Liquidity(
         config['solanaEndpoint'],
-        config['ammPoolId'],
+        get_amm_id(config["baseMint"]),
         config['walletSecretKey'],
         config['symbol']
     )
