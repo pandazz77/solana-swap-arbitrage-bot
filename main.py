@@ -137,8 +137,9 @@ async def main():
         config['walletSecretKey'],
         config['symbol']
     )
-    cex = CEX(config['symbol'], config['cexAPIKey'], config['cexSecretKey'])
-    await monitor_prices()
+    await amm.buy(0.1)
+    #cex = CEX(config['symbol'], config['cexAPIKey'], config['cexSecretKey'])
+    #await monitor_prices()
     # estimate_sell_usd, cex_price, execution_price = await cex.calc_sell_usd_amount(1)
     # await cex.buy(1, cex_price, execution_price)
     # print(await amm.sell(2))
